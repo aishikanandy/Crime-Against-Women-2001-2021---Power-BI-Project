@@ -1,0 +1,37 @@
+##All Cases = SUM(Fact_Crimes[Total Crimes])
+
+##Assault = SUM(Fact_Crimes[Assault against Women])
+
+##Abduction = SUM(Fact_Crimes[Kidnaping & Abduction])
+
+##Dowry = SUM(Fact_Crimes[Dowry Deaths])
+
+##DV = SUM(Fact_Crimes[Domestic Violence])
+
+##Molestation = SUM(Fact_Crimes[Assault against Modesty of Women])
+
+##Sexual Abuse = SUM(Fact_Crimes[Rape])
+
+##Trafficking = SUM(Fact_Crimes[Women Trafficking])
+
+##State Name = "State Deep Dive — " & SELECTEDVALUE('Dim_State'[State], "All States")
+
+##State Rank in Crime = RANKX(ALL(Dim_State[State]), [All Cases], , DESC, DENSE)
+
+Top 10 States by Crime = 
+IF(
+    [State Rank in Crime] <= 10,
+    [All Cases]
+)
+
+##YTD Crimes = TOTALYTD('Fact_Crimes'[All Cases], 'Date Table'[Date])
+
+##YOY Change % = VAR YOY_Change = [All Cases]-[Crimes Same Period Last Year]
+            RETURN (DIVIDE(YOY_Change, [Crimes Same Period Last Year], 0))
+
+##Rolling 3Y Avg = CALCULATE([All Cases], (DATESINPERIOD('Date Table'[Date], LASTDATE('Date Table'[Date]), -3, YEAR)))/3
+
+##Crimes Same Period Last Year = CALCULATE('Fact_Crimes'[All Cases], SAMEPERIODLASTYEAR('Date Table'[Date]))
+
+##% Change vs 2001 = VAR Base2001= CALCULATE([All Cases], 'Date Table'[Year]=2001)
+                    RETURN (DIVIDE([All Cases]-Base2001, Base2001, 0))
